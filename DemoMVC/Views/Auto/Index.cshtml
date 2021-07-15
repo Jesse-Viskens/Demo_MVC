@@ -5,6 +5,7 @@
         <th>Merk</th>
         <th>Type</th>
         <th>Kmstand</th>
+        <th>Details</th>
     </tr>
     @foreach (AutoModel autoModel in Model)
     {
@@ -12,6 +13,8 @@
             <td>@autoModel.Merk</td>
             <td>@autoModel.Type</td>
             <td>@autoModel.KilometerStand</td>
+            <td>@Html.ActionLink("Go to Details","Detail","Demo",new { id=autoModel.Id }, new { @class="btn btn-primary" })</td>
         </tr>
     }
 </table>
+@Html.ActionLink("Add new Car", "AddAuto","Auto",null,new{@class="btn btn-primary"});

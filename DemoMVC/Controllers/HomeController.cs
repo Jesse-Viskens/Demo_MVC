@@ -28,12 +28,6 @@ namespace DemoMVC.Controllers
         {
             return View();
         }
-        public IActionResult DemoCode()
-        {
-            ViewData["Title"] = "DemoPagina";
-            ViewData["Time"] = DateTime.Now;
-            return View();
-        }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
