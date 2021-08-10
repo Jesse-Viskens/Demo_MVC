@@ -8,11 +8,6 @@ namespace DemoMVC.Models
 {
     public class AutoModel
     {
-        public AutoModel()
-        {
-            AutosCreated++;
-        }
-        public static int AutosCreated { get; set; } = 0;
         public int Id { get; set; }
         [Required(ErrorMessage = "Kilometerstand is verplicht!")]
         public int KilometerStand { get; set; }
