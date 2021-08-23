@@ -1,13 +1,11 @@
 ﻿using DemoMVC.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace DemoMVC.Data
 {
-    public class VoertuigDbContext:DbContext
+    public class VoertuigDbContext:IdentityDbContext<Customer>
     {
         public VoertuigDbContext(DbContextOptions<VoertuigDbContext> options): base(options)
         {

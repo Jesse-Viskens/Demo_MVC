@@ -1,14 +1,14 @@
 ﻿
 using DemoMVC.Data;
 using DemoMVC.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace DemoMVC.Controllers
 {
+    
+
     public class AutoController : Controller
     {
         VoertuigDbContext Context;
@@ -16,14 +16,16 @@ namespace DemoMVC.Controllers
         {
             Context = context;
         }
+        
         public IActionResult Index()
         {
             return View(Context.Autos);
         }
+        [Authorize]
         public IActionResult Detail(int id)
         {
-            var auto = Context.Autos.Where(a => a.Id == id);
-            return View(auto.FirstOrDefault());
+            var autos = Context.Autos.Where(a => a.Id == id);
+            return View(autos.FirstOrDefault());
         }
         public IActionResult AddAuto()
         {
@@ -36,7 +38,6 @@ namespace DemoMVC.Controllers
             {
                 Context.Autos.Add(auto);
                 Context.SaveChanges();
-                int id = auto.Id;
                 return RedirectToAction("Detail", new { id = auto.Id });
             }
             return View(auto);
