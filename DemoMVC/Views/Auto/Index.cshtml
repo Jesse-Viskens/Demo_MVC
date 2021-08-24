@@ -13,8 +13,10 @@
             <td>@autoModel.Merk</td>
             <td>@autoModel.Type</td>
             <td>@autoModel.KilometerStand</td>
-            <td>@Html.ActionLink("Go to Details","Detail","Auto",new { id=autoModel.Id }, new { @class="btn btn-primary" })</td>
+            <td>@Html.ActionLink("Go to Details", "Detail", "Auto", new { id = autoModel.Id }, new { @class = "btn btn-primary" })</td>
         </tr>
     }
 </table>
-@Html.ActionLink("Add new Car", "AddAuto","Auto",null,new{@class="btn btn-primary"});
+@if (User.IsInRole("Administrator")) {
+@Html.ActionLink("Add new Car", "AddAuto", "Auto", null, new { @class = "btn btn-primary" });
+}

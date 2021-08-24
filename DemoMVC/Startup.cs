@@ -10,6 +10,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using System;
+using System.Threading.Tasks;
 
 namespace DemoMVC
 {
@@ -42,7 +44,7 @@ namespace DemoMVC
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IServiceProvider servicesProvider)
         {
             if (env.IsDevelopment())
             {
@@ -68,6 +70,51 @@ namespace DemoMVC
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
             });
+            CreateRoles(servicesProvider);
+        }
+
+        private void CreateRoles(IServiceProvider serviceProvider)
+        {
+            var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+            var userManager = serviceProvider.GetRequiredService<UserManager<Customer>>();
+            Task<IdentityResult> roleResult;
+
+
+            Task<bool> adminExists =  roleManager.RoleExistsAsync("Administrator");
+
+            if (!adminExists.Result)
+            {
+                roleResult = roleManager.CreateAsync(new IdentityRole("Administrator"));
+                roleResult.Wait();
+            }
+
+            //Task<bool> normalExists = roleManager.RoleExistsAsync("NormalUser");
+
+            //if (!normalExists.Result)
+            //{
+            //    roleResult = roleManager.CreateAsync(new IdentityRole("NormalUser"));
+            //    roleResult.Wait();
+            //}
+            string email = "Admin@admin.be";
+            Task<Customer> adminUser =  userManager.FindByEmailAsync(email);
+            adminUser.Wait();
+
+            if(adminUser.Result == null)
+            {
+                //create new user
+                Customer admin = new Customer();
+                admin.Email = email;
+                admin.UserName = email;
+
+                Task<IdentityResult> newAdmin = userManager.CreateAsync(admin, "Testje123!");
+                newAdmin.Wait();
+
+                if (newAdmin.Result.Succeeded)
+                {
+                    Task<IdentityResult>adminWithRole =  userManager.AddToRoleAsync(admin, "Administrator");
+                    adminWithRole.Wait();
+                }
+            }
         }
     }
 }

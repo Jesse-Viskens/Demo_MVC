@@ -27,10 +27,12 @@ namespace DemoMVC.Controllers
             var autos = Context.Autos.Where(a => a.Id == id);
             return View(autos.FirstOrDefault());
         }
+        [Authorize(Roles = "Administrator")]
         public IActionResult AddAuto()
         {
             return View();
         }
+        [Authorize(Roles = "Administrator")]
         [HttpPost]
         public IActionResult AddAuto(AutoModel auto)
         {
