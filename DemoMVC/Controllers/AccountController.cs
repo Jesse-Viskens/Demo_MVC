@@ -14,6 +14,7 @@ namespace DemoMVC.Controllers
             _userManager = userManager;
             _signInManager = signInManager;
         }
+
         public IActionResult Index()
         {
             return View();
@@ -69,5 +70,11 @@ namespace DemoMVC.Controllers
             await _signInManager.SignOutAsync();
             return RedirectToAction("Index", "Home");
         }
+        [Route("/Account/AccessDenied")]
+        public IActionResult AccessDenied()
+        {
+            return View();
+        }
+
     }
 }
