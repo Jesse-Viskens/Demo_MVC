@@ -1,3 +1,4 @@
+using DemoMVC.DAL.Data;
 using DemoMVC.Data;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;

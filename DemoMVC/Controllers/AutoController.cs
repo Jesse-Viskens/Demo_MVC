@@ -1,9 +1,7 @@
-﻿
-using DemoMVC.Data;
+﻿using DemoMVC.BLL.Services.Auto;
 using DemoMVC.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Linq;
 
 namespace DemoMVC.Controllers
 {
@@ -11,21 +9,21 @@ namespace DemoMVC.Controllers
 
     public class AutoController : Controller
     {
-        VoertuigDbContext Context;
-        public AutoController(VoertuigDbContext context)
+        private readonly IAutoService _autoService;
+        public AutoController(IAutoService autoService)
         {
-            Context = context;
+            _autoService = autoService;
         }
         
         public IActionResult Index()
         {
-            return View(Context.Autos);
+            return View(_autoService.GetAllAutos());
         }
         [Authorize]
         public IActionResult Detail(int id)
         {
-            var autos = Context.Autos.Where(a => a.Id == id);
-            return View(autos.FirstOrDefault());
+           
+            return View(_autoService.GetAutoByID(id));
         }
         [Authorize(Roles = "Administrator")]
         public IActionResult AddAuto()
@@ -38,8 +36,7 @@ namespace DemoMVC.Controllers
         {
             if (ModelState.IsValid)
             {
-                Context.Autos.Add(auto);
-                Context.SaveChanges();
+                auto = _autoService.AddAuto(auto);
                 return RedirectToAction("Detail", new { id = auto.Id });
             }
             return View(auto);

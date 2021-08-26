@@ -3,9 +3,9 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
-namespace DemoMVC.Data
+namespace DemoMVC.DAL.Data
 {
-    public class VoertuigDbContext:IdentityDbContext<Customer>
+    public class VoertuigDbContext:IdentityDbContext<IdentityUser>
     {
         public VoertuigDbContext(DbContextOptions<VoertuigDbContext> options): base(options)
         {

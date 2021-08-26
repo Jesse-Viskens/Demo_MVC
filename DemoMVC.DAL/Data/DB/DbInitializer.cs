@@ -1,8 +1,7 @@
-﻿using DemoMVC.Models;
-using System;
+﻿using DemoMVC.DAL.Data;
+using DemoMVC.Models;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace DemoMVC.Data
 {

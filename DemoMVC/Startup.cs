@@ -1,11 +1,12 @@
-using DemoMVC.Data;
+using DemoMVC.BLL;
+using DemoMVC.BLL.Services.Auto;
+using DemoMVC.DAL;
+using DemoMVC.DAL.Data;
+using DemoMVC.DAL.Data.Repositories.Auto;
 using DemoMVC.Models;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -28,11 +29,15 @@ namespace DemoMVC
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
-            services.AddDbContext<VoertuigDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("AutoContext")));
-            services.AddIdentity<Customer, IdentityRole>()
+
+            services.AddIdentity<IdentityUser, IdentityRole>()
                 .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<VoertuigDbContext>()
                 .AddDefaultTokenProviders();
+
+            services.RegisterBLL();
+            services.RegisterDAL(Configuration);
+
 
             services.Configure<IdentityOptions>(options =>
             {
@@ -41,6 +46,12 @@ namespace DemoMVC
                 options.Password.RequireNonAlphanumeric = false;
 
             });
+            services.ConfigureApplicationCookie(options =>
+            {
+                options.AccessDeniedPath = "/Home/Index";
+
+            });
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -63,6 +74,7 @@ namespace DemoMVC
 
             app.UseAuthentication();
             app.UseAuthorization();
+            app.UseStatusCodePagesWithRedirects("/MyStatusCode?code={0}");
 
             app.UseEndpoints(endpoints =>
             {
@@ -76,7 +88,7 @@ namespace DemoMVC
         private void CreateRoles(IServiceProvider serviceProvider)
         {
             var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
-            var userManager = serviceProvider.GetRequiredService<UserManager<Customer>>();
+            var userManager = serviceProvider.GetRequiredService<UserManager<IdentityUser>>();
             Task<IdentityResult> roleResult;
 
 
@@ -96,13 +108,13 @@ namespace DemoMVC
             //    roleResult.Wait();
             //}
             string email = "Admin@admin.be";
-            Task<Customer> adminUser =  userManager.FindByEmailAsync(email);
+            Task<IdentityUser> adminUser =  userManager.FindByEmailAsync(email);
             adminUser.Wait();
 
             if(adminUser.Result == null)
             {
                 //create new user
-                Customer admin = new Customer();
+                IdentityUser admin = new IdentityUser();
                 admin.Email = email;
                 admin.UserName = email;
 

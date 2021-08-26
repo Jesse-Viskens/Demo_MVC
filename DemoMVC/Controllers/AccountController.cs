@@ -7,9 +7,9 @@ namespace DemoMVC.Controllers
 {
     public class AccountController : Controller
     {
-        private readonly UserManager<Customer> _userManager;
-        private readonly SignInManager<Customer> _signInManager;
-        public AccountController(UserManager<Customer> userManager,SignInManager<Customer> signInManager)
+        private readonly UserManager<IdentityUser> _userManager;
+        private readonly SignInManager<IdentityUser> _signInManager;
+        public AccountController(UserManager<IdentityUser> userManager,SignInManager<IdentityUser> signInManager)
         {
             _userManager = userManager;
             _signInManager = signInManager;
@@ -27,7 +27,7 @@ namespace DemoMVC.Controllers
         {
             if(ModelState.IsValid == true)
             {
-                var user = new Customer {UserName = loginViewModel.UserName,PasswordHash = loginViewModel.Password, Email = loginViewModel.Email };
+                var user = new IdentityUser { UserName = loginViewModel.UserName,PasswordHash = loginViewModel.Password, Email = loginViewModel.Email };
                 var result = await _userManager.CreateAsync(user, loginViewModel.Password);
 
                 if (result.Succeeded)
