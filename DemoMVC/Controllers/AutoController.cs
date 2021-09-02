@@ -2,22 +2,39 @@
 using DemoMVC.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
+using System;
+using System.Collections.Generic;
 
 namespace DemoMVC.Controllers
 {
-    
-
     public class AutoController : Controller
     {
         private readonly IAutoService _autoService;
-        public AutoController(IAutoService autoService)
+        private readonly ILogger<AutoController> _logger;
+        public AutoController(IAutoService autoService, ILogger<AutoController> logger)
         {
             _autoService = autoService;
+            _logger = logger;
         }
         
         public IActionResult Index()
         {
-            return View(_autoService.GetAllAutos());
+            List<AutoModel> autos;
+            try
+            {
+                autos = _autoService.GetAllAutos();
+                _logger.LogInformation("Managed to get all the autos");
+                _logger.LogDebug("this is a debug log");
+                _logger.LogWarning("this is a warning log");
+                _logger.LogError("this is an error log");
+            }
+            catch (Exception e)
+            {
+                _logger.LogError($"Failed to get all the autos: {e.Message}");
+                throw;
+            }
+            return View(autos);
         }
         [Authorize]
         public IActionResult Detail(int id)

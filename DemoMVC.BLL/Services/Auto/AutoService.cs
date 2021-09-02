@@ -15,8 +15,7 @@ namespace DemoMVC.BLL.Services.Auto
 
         public AutoModel AddAuto(AutoModel auto)
         {
-            var autoToCheck=  _autoRepository.AddAuto(auto);
-            return _autoRepository.GetAutoByID(autoToCheck.Id);
+            return _autoRepository.AddAuto(auto);
         }
 
         public List<AutoModel> GetAllAutos()

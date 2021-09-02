@@ -13,6 +13,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
 using System.Threading.Tasks;
+using Serilog;
 
 namespace DemoMVC
 {
@@ -74,7 +75,10 @@ namespace DemoMVC
 
             app.UseAuthentication();
             app.UseAuthorization();
+            //app.UseSerilogRequestLogging();
+
             app.UseStatusCodePagesWithRedirects("/MyStatusCode?code={0}");
+
 
             app.UseEndpoints(endpoints =>
             {
